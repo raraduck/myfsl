@@ -1,0 +1,114 @@
+# Use Ubuntu 18.04 as base image
+FROM ubuntu:18.04
+
+# Set non-interactive mode for APT
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Update and install necessary dependencies
+RUN apt update && apt install -y --no-install-recommends wget curl gnupg ca-certificates
+
+# Add NeuroDebian repository and FSL public key
+RUN wget -O /etc/apt/sources.list.d/neurodebian.sources.list http://neuro.debian.net/lists/bionic.jp.full
+RUN mkdir -p /root/.gnupg && chmod 700 /root/.gnupg
+RUN gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/neurodebian.gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 0xA5D32F012649A5A9 && \
+    chmod 644 /etc/apt/trusted.gpg.d/neurodebian.gpg
+
+RUN apt-get update && apt-get install -y --no-install-recommends fsl-complete
+
+# Set entrypoint to ensure fsl.sh is executed
+# v0.43
+RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && exec \"$@\"", "--"]
+CMD ["flirt", "-version"]
+
+# # v0.42
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && exec \"$@\"", "--"]
+# CMD ["flirt", "-version"]
+
+# v0.41
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && exec \"$@\"", "--"]
+# CMD ["flirt", "-version"]
+
+# v0.40
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# CMD ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && flirt -version"]
+
+# v0.39
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# CMD ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && echo $FSLDIR"]
+
+# v0.33
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> /root/.profile
+# ENTRYPOINT ["/bin/bash", "-c", "source /root/.profile && flirt"]
+# CMD ["-version"]
+
+# v0.34
+# # Disable mesg warning by preventing tty check
+# RUN echo "tty -s && mesg n || true" >> /root/.bashrc
+# 
+# # Ensure fsl.sh is sourced and flirt is executed
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> /root/.bashrc
+# ENTRYPOINT ["/bin/bash", "-c", "source /root/.bashrc && flirt"]
+# CMD ["-version"]
+
+# v0.35
+# # Ensure fsl.sh is sourced and flirt is executed
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> /root/.bashrc
+# ENTRYPOINT ["/bin/bash", "-c", "source /root/.bashrc && flirt"]
+# CMD ["-version"]
+
+# v0.36
+# Ensure fsl.sh is sourced and flirt is executed
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# ENTRYPOINT ["/bin/bash", "-c", "flirt"]
+# CMD ["-version"]
+
+# v0.37
+# Ensure fsl.sh is sourced and flirt is executed
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# ENTRYPOINT ["/bin/bash", "-c", "flirt"]
+
+# v0.38
+# RUN echo "source /etc/fsl/5.0/fsl.sh" >> ~/.bashrc
+# CMD ["/bin/bash", "-c", "echo $FSLDIR"]
+
+
+
+
+
+
+
+
+
+
+# RUN chmod +x /etc/fsl/5.0/fsl.sh
+# RUN . /etc/fsl/5.0/fsl.sh
+
+# ENTRYPOINT ["source", "/etc/fsl/5.0/fsl.sh"]
+# ENTRYPOINT ["/etc/fsl/5.0/bin/flirt", "-version"]
+# CMD ["flirt", "-version"]
+
+
+# CMD ["echo $FSLDIR"]
+# RUN . /etc/fsl/5.0/fsl.sh
+# ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && flirt -version"]
+# CMD ["$FSLDIR"]
+
+
+# ENTRYPOINT ["run_first_all"]
+# ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && exec \"$@\""]
+# ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && exec flirt \'$@\'"]
+# ENTRYPOINT ["/bin/bash", "-c", "source /etc/fsl/5.0/fsl.sh && exec flirt \"$0\" \"$@\"", "flirt"]
+# ENTRYPOINT ["/bin/bash", "-c", "exec ls"]
+# ENTRYPOINT ["ls"]
+# ENTRYPOINT ["/bin/bash", "-c", "source ~/.bashrc && exec \"$@\""]
+
+# CMD ["ls", "-al"]
+
+# Default command to keep container alive
+# CMD ["-i", "t1_input", "-o", "output"]]
+
+# SHELL ["/bin/bash", "-c", 
+
